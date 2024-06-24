@@ -1,0 +1,7 @@
+2024-06-24 22:30:12: testset'acc: device=cuda:1, dataset=amazon_photo, learning_rate=0.0015, T=32, max_test_accuracy=0.9247, loss = 0.0110, num_s1: 7950, num_s2: 32, num_s_per_node: 7982
+2024-06-24 22:33:47: testset'acc: device=cuda:1, dataset=amazon_photo, learning_rate=0.0015, T=32, max_test_accuracy=0.9255, loss = 0.0195, num_s1: 7938, num_s2: 32, num_s_per_node: 7970
+2024-06-24 22:37:22: testset'acc: device=cuda:1, dataset=amazon_photo, learning_rate=0.0015, T=32, max_test_accuracy=0.9199, loss = 0.0231, num_s1: 7914, num_s2: 32, num_s_per_node: 7946
+2024-06-24 22:38:35: testset'acc: device=cuda:1, dataset=amazon_photo, learning_rate=0.0015, T=32, max_test_accuracy=0.9196, loss = 0.0359, num_s1: 7973, num_s2: 32, num_s_per_node: 8005
+2024-06-24 22:43:01: testset'acc: device=cuda:1, dataset=amazon_photo, learning_rate=0.0015, T=32, max_test_accuracy=0.8971, loss = 0.0321, num_s1: 7927, num_s2: 30, num_s_per_node: 7957
+2024-06-24 22:44:21: testset'acc: device=cuda:1, dataset=amazon_photo, learning_rate=0.0015, T=32, max_test_accuracy=0.9247, loss = 0.0169, num_s1: 7926, num_s2: 32, num_s_per_node: 7958
+2024-06-24 22:56:52: testset'acc: device=cuda:1, dataset=amazon_photo, learning_rate=0.0015, T=32, max_test_accuracy=0.9203, loss = 0.0185, num_s1: 7954, num_s2: 31, num_s_per_node: 7985

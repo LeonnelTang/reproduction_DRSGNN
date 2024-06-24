@@ -1,0 +1,76 @@
+{
+  "shared_conf": {
+    "device": "cuda:1",
+    "dataset_dir": "graphfromgg",
+    "test_size": 0.2
+  },
+  "snn": {
+    "log_dir": "./tmpdir/snn",
+    "amazon_photo": {
+      "batch_size": 64,
+      "learning_rate": 2e-2,
+      "T": 400,
+      "tau": 32,
+      "v_reset": -100,
+      "v_threshold": 0.1,
+      "train_epoch": 120
+    },
+    "amazon_cs": {
+      "batch_size": 64,
+      "learning_rate": 2e-2,
+      "T": 400,
+      "tau": 32,
+      "v_reset": -100,
+      "v_threshold": 0.1,
+      "train_epoch": 120
+    },
+    "dblp": {
+      "batch_size": 64,
+      "learning_rate": 2e-2,
+      "T": 400,
+      "tau": 32,
+      "v_reset": -100,
+      "v_threshold": 0.1,
+      "train_epoch": 120
+    },
+    "coauthor_phy": {
+      "batch_size": 64,
+      "learning_rate": 2e-2,
+      "T": 400,
+      "tau": 32,
+      "v_reset": -100,
+      "v_threshold": 0.1,
+      "train_epoch": 120
+    },
+    "cora": {
+      "batch_size": 64,
+      "learning_rate": 2e-3,
+      "T": 200,
+      "tau": 80,
+      "v_reset": -100,
+      "v_threshold": 0.20,
+      "train_epoch": 200,
+      "ggp_embedding": false,
+      "num_per_class": 20
+    },
+    "acm": {
+      "batch_size": 64,
+      "learning_rate": 2e-2,
+      "T": 150,
+      "tau": 80,
+      "v_reset": -100,
+      "v_threshold": 0.6,
+      "train_epoch": 100
+    },
+    "blogcatalog": {
+      "batch_size": 64,
+      "learning_rate": 2e-2,
+      "T": 400,
+      "tau": 32,
+      "v_reset": -100,
+      "v_threshold": 0.1,
+      "train_epoch": 120
+    }
+  }
+}
+
