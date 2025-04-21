@@ -276,7 +276,7 @@ class ReadData():
     data_norm = np.zeros(mat.shape)
     for x in range(mat.shape[-1]):
       data_norm[:,x]=mat[:,x]/np.max(np.abs(mat[:,x]))
-    #   print("th.max(th.abs(data[:,x])):",th.max(th.abs(data[:,x])))
+    #   print("th.max(th.abs(dataset[:,x])):",th.max(th.abs(dataset[:,x])))
     return data_norm
 
   def get_random_splited_data(self, mat, tag, test_size=0.2, random_state=2020):

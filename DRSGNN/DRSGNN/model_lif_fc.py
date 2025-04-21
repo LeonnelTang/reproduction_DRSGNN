@@ -7,6 +7,37 @@ from os.path import join as pjoin
 import sharedutils
 from leanable_thre import LIFSpike
 
+import logging
+import os
+
+# 确保日志文件路径正确且可写
+log_filename = os.path.join(os.getcwd(), "training.log")
+
+# 创建 logger 对象
+logger = logging.getLogger("train_logger")
+logger.setLevel(logging.INFO)
+
+# 创建一个 FileHandler 用于写入日志文件
+fh = logging.FileHandler(log_filename, mode="w")
+fh.setLevel(logging.INFO)
+
+# # 创建一个 StreamHandler 用于控制台输出（可选）
+# ch = logging.StreamHandler()
+# ch.setLevel(logging.INFO)
+
+# 定义日志输出格式
+formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+fh.setFormatter(formatter)
+# ch.setFormatter(formatter)
+
+# 添加 Handler 到 logger
+logger.addHandler(fh)
+# logger.addHandler(ch)
+
+# 现在在代码中使用 logger.info() 记录日志
+logger.info("Logger setup complete. Logging to training.log.")
+
+
 def model_lif_fc(dataname, dataset_dir, device, batch_size,
                  learning_rate, T, tau, v_threshold, v_reset, train_epoch, log_dir, 
                  n_labels, n_dim0, n_dim1, n_dim2, train_data_loader,
@@ -84,8 +115,10 @@ def model_lif_fc(dataname, dataset_dir, device, batch_size,
             if val_accuracy > max_val_accuracy:
                 max_val_accuracy = val_accuracy
                 torch.save(net, model_pth)
-        print(f'Epoch {epoch}: device={device}, max_train_accuracy={train_accs[-1]:.4f},loss = {loss:.4f},max_val_accuracy={max_val_accuracy:.4f}, train_times={train_times}', end="\r")
-    
+        # print(f'Epoch {epoch}: device={device}, max_train_accuracy={train_accs[-1]:.4f},loss = {loss:.4f},max_val_accuracy={max_val_accuracy:.4f}, train_times={train_times}', end="\r")
+        logger.info(
+            f'Epoch {epoch}: device={device}, max_train_accuracy={train_accs[-1]:.4f}, loss = {loss:.4f}, max_val_accuracy={max_val_accuracy:.4f}, train_times={train_times}')
+
     # test
     best_snn = torch.load(model_pth)
     best_snn.eval()

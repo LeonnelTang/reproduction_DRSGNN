@@ -15,7 +15,8 @@ def snn_run(dataname,if_with_val, **new_conf):
   cnf['log_dir'] = conf['snn']['log_dir']
   if cnf['v_reset'] == -100: cnf['v_reset'] = None
   print("batch_size:", cnf["batch_size"])
-  rd = datareader.ReadData("/data/zh/dataset/datafromgg")
+  # rd = datareader.ReadData("/dataset/zh/dataset/datafromgg")
+  rd = datareader.ReadData("./dataset/datafromgg")
 
   data_fixed = rd.read_raw_data(dataname)
   data =data_fixed
@@ -33,10 +34,10 @@ def snn_run(dataname,if_with_val, **new_conf):
   tr_ind, val_ind, ts_ind = data.split_nodes().train_nodes, \
   data.split_nodes().val_nodes, data.split_nodes().test_nodes
 
-        
+
   print("train, valiadation,test's shape:", len(tr_ind), len(val_ind), len(ts_ind))
   tr_val_ind = np.hstack((tr_ind,val_ind))
-     
+
 
   tr_val_mat = mat[tr_val_ind]
   tr_val_tag = tag[tr_val_ind]
@@ -54,22 +55,22 @@ def snn_run(dataname,if_with_val, **new_conf):
 
 
   self_sample = False
-  
+
   if self_sample==True:
     train_data_loader, val_data_loader, test_data_loader = rd.sample_numpy2dataloader(20,data_fixed, mat, tag, batch_size=cnf["batch_size"])
   else:
     train_data_loader, val_data_loader, test_data_loader = rd.tr_ts_val_numpy2dataloader_LSPE(tr_mat, ts_mat, val_mat,tr_PE, ts_PE, val_PE, tr_tag,
                                                                                      ts_tag, val_tag,
                                                                                      batch_size=cnf["batch_size"])
-    
-       
 
-  
+
+
+
   print("train, valiadation,test's batch num:", len(train_data_loader), len(val_data_loader), len(test_data_loader))
 
   n_nodes, n_feat, n_flat = mat.shape[0], (mat.shape[1]+PE.shape[1]), 1
-  print("data: %s, num_node_classes: %d" % (dataname, data.graph.num_classes))
-  if if_with_val=='no':
+  print("dataset: %s, num_node_classes: %d" % (dataname, data.graph.num_classes))
+  if if_with_val=="no":
     print('mode: with no valcode ')
     ret = model_lif_fc(device=cnf["device"], dataset_dir=cnf["dataset_dir"],
                        dataname=dataname, batch_size=cnf["batch_size"],
@@ -78,7 +79,7 @@ def snn_run(dataname,if_with_val, **new_conf):
                        train_epoch=cnf["train_epoch"], log_dir=cnf["log_dir"], n_labels=data.graph.num_classes,
                        n_dim0=n_nodes, n_dim1=n_flat, n_dim2=n_feat, train_data_loader=train_data_loader,
                        val_data_loader=val_data_loader, test_data_loader=test_data_loader, PE_dim=PE_dim)
-  elif if_with_val=='yes':
+  elif if_with_val=="yes":
     print('mode: with valcode ')
     ret = model_lif_fc_with_val(device=cnf["device"], dataset_dir=cnf["dataset_dir"],
                        dataname=dataname, batch_size=cnf["batch_size"],
@@ -88,7 +89,7 @@ def snn_run(dataname,if_with_val, **new_conf):
                        n_dim0=n_nodes, n_dim1=n_flat, n_dim2=n_feat, train_data_loader=train_data_loader,
                        val_data_loader=val_data_loader, test_data_loader=test_data_loader, PE_dim=PE_dim)
 
-  
+
   return ret
 
 
@@ -123,27 +124,30 @@ def search_params(dataname, runs, log_dir,if_with_val):
   best_score, std, best_params = sharedutils.grid_search(dataname, runs, params_set,model_startup,if_with_val)
   msg = "sgc; %s; best_score, std, best_params %s %s %s\n" % (dataname, best_score, std, best_params)
   print(msg)
+
+
+
   sharedutils.add_log(os.path.join(log_dir, "snn_search.log"), msg)
 
-  
+
 if __name__ == '__main__':
   print('* Set parameters in models_conf.json, such as device": "cuda:0"')
-  do_search_params = "yes"
-  dataname="amazon_photo"
+  do_search_params = "no"
+  dataname="coauthor_phy"
   runs = 3
   if_with_val = "no" #or "yes"
 
   # do the parameter search for each dataset
   if do_search_params == "yes":
-    if_with_val = "no"
-    allconfs = sharedutils.read_config("./models_conf.json")
-    search_params(dataname, runs, allconfs["snn"]["log_dir"], if_with_val)
+    if if_with_val == "no":
+      allconfs = sharedutils.read_config("./models_conf.json")
+      search_params(dataname, runs, allconfs["snn"]["log_dir"], if_with_val)
 
-    if_with_val ="yes"
-    allconfs = sharedutils.read_config("./models_conf.json")
-    search_params(dataname, runs, allconfs["snn"]["log_dir"], if_with_val)
+    if if_with_val == "yes":
+      allconfs = sharedutils.read_config("./models_conf.json")
+      search_params(dataname, runs, allconfs["snn"]["log_dir"], if_with_val)
 
 
   else:
-    me, st, result_msg = model_startup(dataname, runs,if_with_val)
+    me, st, result_msg = model_startup(dataname, runs, if_with_val)
     print("acc_averages %04d times: means: %04f std: %04f" % (runs, me, st))

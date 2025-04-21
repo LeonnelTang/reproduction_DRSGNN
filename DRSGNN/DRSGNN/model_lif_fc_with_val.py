@@ -6,6 +6,27 @@ from os.path import join as pjoin
 import sharedutils
 from leanable_thre import LIFSpike
 
+import logging
+import os
+
+# log_filename = os.path.join(os.getcwd(), "training.log")
+#
+# logger = logging.getLogger("train_logger")
+# logger.setLevel(logging.INFO)
+#
+# if not logger.handlers:
+#     fh = logging.FileHandler(log_filename, mode="w")
+#     fh.setLevel(logging.INFO)
+#
+#     formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+#     fh.setFormatter(formatter)
+#
+#     logger.addHandler(fh)
+#
+# logger.propagate = False
+#
+# logger.info("Logger setup complete. Logging to training.log.")
+
 
 def model_lif_fc_with_val(dataname, dataset_dir, device, batch_size,
                  learning_rate, T, tau, v_threshold, v_reset, train_epoch, log_dir, 
@@ -84,8 +105,14 @@ def model_lif_fc_with_val(dataname, dataset_dir, device, batch_size,
             if val_accuracy > max_val_accuracy:
                 max_val_accuracy = val_accuracy
                 torch.save(net, model_pth)
-        print(f'Epoch {epoch}: device={device}, dataset_dir={dataset_dir}, batch_size={batch_size}, learning_rate={learning_rate}, T={T}, log_dir={log_dir}, max_train_accuracy={train_accs[-1]:.4f},max_val_accuracy={max_val_accuracy:.4f}, train_times={train_times}', end="\r")
-    
+        # print(f'Epoch {epoch}: device={device}, dataset_dir={dataset_dir}, batch_size={batch_size}, learning_rate={learning_rate}, T={T}, log_dir={log_dir}, max_train_accuracy={train_accs[-1]:.4f},max_val_accuracy={max_val_accuracy:.4f}, train_times={train_times}', end="\r")
+        logger.info(
+            f'Epoch {epoch}: device={device}, dataset_dir={dataset_dir}, batch_size={batch_size}, '
+            f'learning_rate={learning_rate}, T={T}, log_dir={log_dir}, '
+            f'max_train_accuracy={train_accs[-1]:.4f}, max_val_accuracy={max_val_accuracy:.4f}, '
+            f'train_times={train_times}'
+        )
+
     # test
     best_snn = torch.load(model_pth)
     best_snn.eval()
@@ -118,4 +145,7 @@ def model_lif_fc_with_val(dataname, dataset_dir, device, batch_size,
     result_msg += f", num_s_per_node: {int(result_num_spikes_1)+int(result_num_spikes_2)}"
     sharedutils.add_log(pjoin(log_dir, "snn_search.log"), result_msg)
     print(result_msg)
+
+    logger.info(result_msg)
+
     return max_test_accuracy, result_msg
